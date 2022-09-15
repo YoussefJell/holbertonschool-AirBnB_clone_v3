@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""starts a Flask web application"""
+"""Flask App"""
 from flask import Flask
 from models.__init__ import storage
 from api.v1.views import app_views
@@ -17,10 +17,6 @@ def teardown(exc):
 
 
 if __name__ == "__main__":
-    if getenv('HBNB_API_HOST') is None:
-        HBNB_API_HOST = '0.0.0.0'
-
-    if getenv('HBNB_API_PORT') is None:
-        HBNB_API_PORT = 5000
-
-    app.run(host=HBNB_API_HOST, port=HBNB_API_PORT, threaded=True)
+    api_host = getenv('HBNB_API_HOST', default='0.0.0.0')
+    api_port = getenv('HBNB_API_PORT', default=5000)
+    app.run(host=api_host, port=int(api_port), threaded=True)
