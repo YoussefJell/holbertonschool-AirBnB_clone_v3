@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Flask App"""
 from flask import Flask
-from models.__init__ import storage
+from models import storage
 from api.v1.views import app_views
 from os import getenv
 
