@@ -40,4 +40,4 @@ def show_stats():
 def not_found(e):
     """Page not found."""
     response = {"error": "Not found"}
-    return jsonify(response)
+    return jsonify(response), e.code
