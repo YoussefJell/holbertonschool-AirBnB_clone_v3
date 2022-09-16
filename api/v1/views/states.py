@@ -18,7 +18,7 @@ def retrieve_state(state_id=None):
         all_objs = [obj.to_dict() for obj in dict_objs.values()]
         return jsonify(all_objs)
 
-    obj = dict_objs.get('State.{}'.format(state_id))
+    obj = storage.get(State, state_id)
 
     if obj:
         obj_todict = obj.to_dict()
@@ -31,9 +31,8 @@ def retrieve_state(state_id=None):
                  methods=['DELETE'])
 def delete_state(state_id):
     """Delete a state"""
-    dict_objs = storage.all(State)
 
-    obj = dict_objs.get('State.{}'.format(state_id))
+    obj = storage.get(State, state_id)
 
     if obj:
         storage.delete(obj)
@@ -47,9 +46,9 @@ def delete_state(state_id):
                  methods=['POST'])
 def add_state():
     """Add a new state"""
-    data = request.get_json(force=True, silent=True)
-
-    if data is None:
+    try:
+        data = request.get_json()
+    except Exception as e:
         abort(400, 'Not a JSON')
     if not data.get('name'):
         abort(400, 'Missing Name')
@@ -65,20 +64,17 @@ def add_state():
                  methods=['PUT'])
 def update_state(state_id=None):
     """Update info about state"""
-    data = request.get_json(force=True, silent=True)
-
-    if data is None:
+    try:
+        data = request.get_json()
+    except Exception as e:
         abort(400, 'Not a JSON')
 
-    dict_objs = storage.all(State)
-
-    obj = dict_objs.get('State.{}'.format(state_id))
+    obj = storage.get(State, state_id)
 
     if obj:
-        for k, v in data.items():
-            if k == 'id' or k == 'created_at' or k == 'updated_at':
-                continue
-            setattr(obj, k, v)
+        for key, value in data.items():
+            if key not in ("id", "created_at", "updated_at"):
+                setattr(obj, key, value)
         storage.save()
     else:
         abort(404)
