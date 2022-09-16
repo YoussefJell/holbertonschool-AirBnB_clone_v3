@@ -9,9 +9,8 @@ from flask import jsonify, request, abort
                  strict_slashes=False)
 def retrieve_cities_stateid(state_id=None):
     """retrieve cities objs of specific state"""
-    dict_objs = storage.all(State)
 
-    obj_state = dict_objs.get('State.{}'.format(state_id))
+    obj_state = storage.get(State, state_id)
 
     if obj_state:
         cities = []
@@ -26,9 +25,8 @@ def retrieve_cities_stateid(state_id=None):
                  methods=['GET'])
 def retrieve_cities(city_id):
     """retreve city given an id"""
-    dict_objs = storage.all(City)
 
-    obj = dict_objs.get('City.{}'.format(city_id))
+    obj = storage.get(City, city_id)
 
     if obj:
         obj_todict = obj.to_dict()
@@ -41,9 +39,8 @@ def retrieve_cities(city_id):
                  methods=['DELETE'])
 def delete_city(city_id):
     """Delete a city"""
-    dict_objs = storage.all(City)
 
-    obj = dict_objs.get('City.{}'.format(city_id))
+    obj = storage.get(City, city_id)
 
     if obj:
         storage.delete(obj)
@@ -58,15 +55,13 @@ def delete_city(city_id):
 def add_city(state_id=None):
     """Add a new city"""
 
-    dict_objs = storage.all(State)
-
-    obj_state = dict_objs.get('State.{}'.format(state_id))
-    if not obj_state:
+    obj_state = storage.get(State, state_id)
+    if obj_state is None:
         abort(404)
 
-    data = request.get_json(force=True, silent=True)
-
-    if data is None:
+    try:
+        data = request.get_json()
+    except Exception as e:
         abort(400, 'Not a JSON')
     if not data.get('name'):
         abort(400, 'Missing Name')
@@ -82,20 +77,17 @@ def add_city(state_id=None):
                  methods=['PUT'])
 def update_city(city_id=None):
     """Update info about city"""
-    data = request.get_json(force=True, silent=True)
-
-    if data is None:
+    try:
+        data = request.get_json()
+    except Exception as e:
         abort(400, 'Not a JSON')
 
-    dict_objs = storage.all(City)
-
-    obj = dict_objs.get('City.{}'.format(city_id))
+    obj = storage.get(City, city_id)
 
     if obj:
-        for k, v in data.items():
-            if k == 'id' or k == 'created_at' or k == 'updated_at':
-                continue
-            setattr(obj, k, v)
+        for key, value in data.items():
+            if key not in ("id", "created_at", "updated_at"):
+                setattr(obj, key, value)
         storage.save()
     else:
         abort(404)
