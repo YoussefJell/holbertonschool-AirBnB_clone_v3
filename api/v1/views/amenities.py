@@ -16,7 +16,7 @@ def retrieve_amenity(amenity_id=None):
         all_objs = [obj.to_dict() for obj in dict_objs.values()]
         return jsonify(all_objs)
 
-    obj = dict_objs.get('Amenity.{}'.format(amenity_id))
+    obj = storage.get(Amenity, amenity_id)
 
     if obj:
         obj_todict = obj.to_dict()
@@ -29,9 +29,8 @@ def retrieve_amenity(amenity_id=None):
                  methods=['DELETE'])
 def delete_amenity(amenity_id=None):
     """Delete an amenity """
-    dict_objs = storage.all(Amenity)
 
-    obj = dict_objs.get('Amenity.{}'.format(amenity_id))
+    obj = storage.get(Amenity, amenity_id)
 
     if obj:
         storage.delete(obj)
@@ -45,9 +44,9 @@ def delete_amenity(amenity_id=None):
                  methods=['POST'])
 def add_amenity():
     """Add a new amenity"""
-    data = request.get_json(force=True, silent=True)
-
-    if data is None:
+    try:
+        data = request.get_json()
+    except Exception as e:
         abort(400, 'Not a JSON')
     if not data.get('name'):
         abort(400, 'Missing Name')
@@ -63,20 +62,17 @@ def add_amenity():
                  methods=['PUT'])
 def update_amenity(amenity_id=None):
     """Update info about an amenity"""
-    data = request.get_json(force=True, silent=True)
-
-    if data is None:
+    try:
+        data = request.get_json()
+    except Exception as e:
         abort(400, 'Not a JSON')
 
-    dict_objs = storage.all(Amenity)
-
-    obj = dict_objs.get('Amenity.{}'.format(amenity_id))
+    obj = storage.get(Amenity, amenity_id)
 
     if obj:
-        for k, v in data.items():
-            if k == 'id' or k == 'created_at' or k == 'updated_at':
-                continue
-            setattr(obj, k, v)
+        for key, value in data.items():
+            if key not in ("id", "created_at", "updated_at"):
+                setattr(obj, key, value)
         storage.save()
     else:
         abort(404)
