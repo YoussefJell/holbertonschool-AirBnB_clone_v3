@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""view for Places objects that handles all default RESTFul API actions"""
 from models import storage
 from models.city import City
 from models.place import Place
