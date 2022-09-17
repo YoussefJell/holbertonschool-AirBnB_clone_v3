@@ -71,9 +71,8 @@ def add_review(place_id=None):
     if not data.get('text'):
         abort(400, 'Missing text')
 
-    user = storage.get(User, data.get('user_id'))
-
-    if user is None:
+    obj_user = storage.get(User, data.get('user_id'))
+    if obj_user is None:
         abort(404)
 
     new_review = Review(place_id=place_id, **data)
