@@ -95,7 +95,8 @@ def update_review(review_id=None):
 
     if obj:
         for key, value in data.items():
-            if key not in ("id", "user_id", "place_id", "created_at", "updated_at"):
+            if key not in ("id", "user_id", "place_id",
+                           "created_at", "updated_at"):
                 setattr(obj, key, value)
         storage.save()
     else:
