@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""view for State objects that handles all default RESTFul API actions"""
+"""view for User objects that handles all default RESTFul API actions"""
 from models import storage
 from models.user import User
 from api.v1.views import app_views
@@ -10,8 +10,8 @@ from flask import jsonify, request, abort
                  methods=['GET'])
 @app_views.route('/users/<user_id>', strict_slashes=False,
                  methods=['GET'])
-def retrieve_state(user_id=None):
-    """retrieve state objs"""
+def retrieve_user(user_id=None):
+    """retrieve user objs"""
     dict_objs = storage.all(User)
 
     if user_id is None:
@@ -29,8 +29,8 @@ def retrieve_state(user_id=None):
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
                  methods=['DELETE'])
-def delete_state(user_id):
-    """Delete a state"""
+def delete_user(user_id):
+    """Delete a user"""
 
     obj = storage.get(User, user_id)
 
@@ -44,8 +44,8 @@ def delete_state(user_id):
 
 @app_views.route('/users/', strict_slashes=False,
                  methods=['POST'])
-def add_state():
-    """Add a new state"""
+def add_user():
+    """Add a new user"""
     try:
         data = request.get_json()
     except Exception as e:
@@ -64,8 +64,8 @@ def add_state():
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
                  methods=['PUT'])
-def update_state(user_id=None):
-    """Update info about state"""
+def update_user(user_id=None):
+    """Update info about user"""
     try:
         data = request.get_json()
     except Exception as e:
