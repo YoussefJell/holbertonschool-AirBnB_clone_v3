@@ -168,6 +168,6 @@ No known bugs at this time.
 Youssef Abid - [Github](https://github.com/yousseffabid)  
 Youssef Jellouli - [Github](https://github.com/YoussefJell)
 
-Second part of Airbnb: Joann Vuong
+
 ## License
 Public Domain. No copy write protection. 
