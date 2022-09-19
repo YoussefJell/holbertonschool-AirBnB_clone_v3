@@ -78,6 +78,7 @@ TestBaseModelDocs class:
 * `def test_bm_class_docstring(self)` - Test for the BaseModel class docstring
 * `def test_bm_func_docstrings(self)` - Test for the presence of docstrings in BaseModel methods
 
+
 TestBaseModel class:
 * `def test_is_base_model(self)` - Test that the instatiation of a BaseModel works
 * `def test_created_at_instantiation(self)` - Test created_at is a pub. instance attribute of type datetime
